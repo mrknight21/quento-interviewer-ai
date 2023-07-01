@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "sean",
+    "description": "bryan",
     "version": "1.0.0",
-    "title": "Seans-Python3-Flask-Rest-Boilerplate",
+    "title": "Quento-ai-swagger",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -21,6 +21,39 @@
     }
   ],
   "paths": {
+    "/ask_quento": {
+      "post": {
+        "tags": [
+          "AI Request"
+        ],
+        "summary": "Ask quento ai for response generation",
+        "requestBody": {
+          "description": "AI response Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/askAiRequestPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
     "/request": {
       "get": {
         "tags": [
@@ -186,6 +219,13 @@
   },
   "components": {
     "schemas": {
+      "askAiRequestPostBody": {
+        "properties": {
+          "session_id": {
+            "type": "string"
+          }
+        }
+      },
       "id": {
         "properties": {
           "uuid": {
