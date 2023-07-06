@@ -6,6 +6,13 @@ from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 from routes import request_api, ai_api
+from firebase_admin import credentials, firestore, initialize_app
+
+
+# Initialize Firestore DB
+cred = credentials.Certificate('key.json')
+default_app = initialize_app(cred)
+db = firestore.client()
 
 APP = Flask(__name__)
 

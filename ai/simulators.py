@@ -1,6 +1,6 @@
 from typing import List, Callable
-from agents.agents import DialogueAgent
-
+from ai.agents import InterviewAgent, HumanAgent, DialogueAgent
+from langchain.chat_models import ChatOpenAI
 
 class DialogueSimulator:
     def __init__(
@@ -50,3 +50,61 @@ class DialogueSimulator:
             termination = True
 
         return speaker.name, message, termination
+
+
+
+from ai.utilities import select_next_speaker
+import os
+import openai
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv()) # read local .env file
+openai.api_key = os.environ['OPENAI_API_KEY']
+
+
+def main():
+    interview_plan = {
+        "purpose": "Validating the need of large scale automatic interviewing and knowledge ecilitatioin using AI.",
+        "background": '''Our startup aims to revolutionize the interview process by harnessing the power of AI. We strive to automate knowledge elicitation and information collection, enabling scalable and accurate insights. By replacing traditional, human-dependent interviewing methods, our solution empowers industries such as media, research, and beyond to gather comprehensive data with larger sample sizes, leading to more reliable and profound outcomes.''',
+        "questions": [
+            "Can you describe the typical problem validation process that startups go through in your experience?",
+            "What are the common challenges or pain points faced by startups during the problem validation phase?",
+            "How do startups typically gather data and insights during the problem validation process? Is it a time-consuming or resource-intensive task?",
+            "Do they conduct interview or any sorts of interactive approach to validate their problems?",
+            "Do you think an AI-powered interview solution could potentially provide value in helping startups validate their problems more efficiently and effectively?",
+            "What features or functionalities would you consider important in an AI-powered tool designed for problem validation in startups?",
+            "Are there any concerns or potential drawbacks you foresee with using AI in the problem validation process for startups?"],
+        "target_audience": "Startup investors who could potentially use the interview AI to help their starup founders validating their problems.",
+        "time_limit": 20,
+        "follow-up questions": True,
+        "questions in order": True
+    }
+
+    agents = [InterviewAgent(name="Cojo",
+                             model=ChatOpenAI(
+                                 model_name='gpt-3.5-turbo',
+                                 temperature=0.2),
+                             plan=interview_plan,
+                             ),
+              HumanAgent("Bryan Chen")]
+
+    simulator = DialogueSimulator(
+        agents=agents,
+        selection_function=select_next_speaker
+    )
+    simulator.reset()
+    # simulator.inject('Moderator', specified_topic)
+    # print(f"(Moderator): {specified_topic}")
+    # print('\n')
+
+    while simulator._step < simulator.max_iters:
+        name, message, termination = simulator.step()
+        print(f"({name}): {message}")
+        print('\n')
+
+        if termination:
+            break
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    main()
