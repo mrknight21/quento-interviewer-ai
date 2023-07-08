@@ -1,11 +1,14 @@
 # Import the Firebase service
 from firebase_admin import firestore, credentials
 import firebase_admin
+import os
 
+DIR_PATH = os.path.dirname(__file__)
+FILE_PATH = os.path.join(DIR_PATH, 'key.json')
 
 def firebase_init():
     if not len(firebase_admin._apps):
-        cred = credentials.Certificate('key.json')
+        cred = credentials.Certificate(FILE_PATH)
         firebase_admin.initialize_app(cred)
 
 
@@ -51,9 +54,7 @@ class FirebaseConnection(object):
     MAX_BATCH_WRITE = 450
 
     def __init__(self, base_collection=None):
-        if not len(firebase_admin._apps):
-            cred = credentials.Certificate('key.json')
-            firebase_admin.initialize_app(cred)
+        firebase_init()
         self.cli = firestore.client()
         self.base_collection = base_collection
 
