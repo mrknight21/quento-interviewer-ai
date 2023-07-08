@@ -1,9 +1,9 @@
-
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
+
 
 class DialogueAgent:
     def __init__(
@@ -71,7 +71,7 @@ class InterviewAgent(DialogueAgent):
         super().__init__(name, "", model)
         self.plan = plan
         self.generate_persona()
-        self.system_message = SystemMessage(content=self.generate_interview_system_message())
+        self.system_message = SystemMessage(content=self.generate_interview_system_message)
 
     def generate_persona(self):
         persona = f''' 
@@ -83,14 +83,11 @@ class InterviewAgent(DialogueAgent):
         '''
         return persona
 
-
+    @property
     def generate_interview_system_message(self):
         prompt = f'''
-        
         Your goal is conducting an interview for {self.plan["purpose"].lower()}
-        
         The background of this interview is: {self.plan["background"].lower()}
-        
         The target audience are: {self.plan["target_audience"].lower()}
         '''
 
@@ -120,3 +117,18 @@ class InterviewAgent(DialogueAgent):
         prompt += "DO ask questions one by one. \n"
         prompt += "DO only complete your current single turn. \n"
         return prompt
+
+
+def generate_single_interview_response(name, plan, conversation):
+    interviewing_agent = InterviewAgent(name=name,
+                                        model=ChatOpenAI(
+                                            model_name='gpt-3.5-turbo',
+                                            temperature=0.5),
+                                        plan=plan,
+                                        )
+    for utterance in conversation:
+        if utterance != "" and utterance["message"]:
+            interviewing_agent.receive(utterance["speaker"], utterance["message"])
+
+    agent_response, signal_completion = interviewing_agent.send()
+    return agent_response, signal_completion
