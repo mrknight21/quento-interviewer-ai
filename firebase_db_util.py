@@ -58,6 +58,7 @@ class FirebaseConnection(object):
         self.cli = firestore.client()
         self.base_collection = base_collection
 
+
     # Add single doc into the collection with or without the custom key
     def insert(self, data, collection=None, doc_id=None, reference=None, mode='set', merge=False):
         if not collection:
