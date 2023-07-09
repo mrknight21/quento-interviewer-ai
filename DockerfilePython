@@ -1,6 +1,6 @@
 FROM python:3.8-rc-slim
 
-COPY app.py /app/app.py
+COPY main.py /app/app.py
 COPY routes /app/routes
 COPY static /app/static
 COPY requirements.txt /app/requirements.txt

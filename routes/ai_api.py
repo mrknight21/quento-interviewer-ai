@@ -1,10 +1,7 @@
 """The Endpoints to interviewer ai"""
-import uuid
-from datetime import datetime, timedelta
 from flask import jsonify, abort, request, Blueprint
 import os
 from datetime import datetime
-import time
 from zoneinfo import ZoneInfo
 import shortuuid
 import openai
@@ -75,7 +72,7 @@ def get_ai_reponse():
         db_connection.insert(interview_session, collection="interviews", doc_id=session_id, mode='set')
 
         # HTTP 201 Created
-        return jsonify({"response": "response gene"}), 201
+        return jsonify({"response": "response successfully generated and stored in db."}), 201
     else:
         return jsonify({"response": "something went wrong, the response generation was not completed"}), 400
 
