@@ -1,6 +1,4 @@
 from langchain import PromptTemplate
-from langchain.output_parsers import PydanticOutputParser
-from pydantic import BaseModel, Field
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
@@ -11,10 +9,6 @@ from langchain.schema import (
 from ai.utilities import parsing_response
 
 MAX_TRYOUT = 3
-
-class QuentoResponse(BaseModel):
-    action_type: str = Field(description="the selected action type for the response")
-    response: str = Field(description="the text of the response")
 
 
 class DialogueAgent:
@@ -28,7 +22,6 @@ class DialogueAgent:
         self.system_message = system_message
         self.model = model
         self.prefix = f"{self.name}: "
-        self.parser = PydanticOutputParser(pydantic_object=QuentoResponse)
         self.reset()
 
     def reset(self):

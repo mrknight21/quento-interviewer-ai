@@ -57,6 +57,9 @@ def get_ai_reponse():
         return jsonify({"response": "interview plan does not exist."}), 400
     agent_name = plan["agent name"]
 
+    if len(conversation) > 0 and not conversation[-1]["isAI"]:
+        return jsonify({"response": "waiting for user reply"}), 400
+
     # generate agent response
     agent_response, signal_completion = generate_single_interview_response(agent_name, plan, conversation)
     if agent_response:
