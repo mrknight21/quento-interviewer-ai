@@ -1,6 +1,7 @@
 from typing import List, Callable
 from ai.agents import InterviewAgent, HumanAgent, DialogueAgent
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 
 class DialogueSimulator:
     def __init__(
@@ -80,7 +81,7 @@ def main():
     }
 
     agents = [InterviewAgent(name="Cojo",
-                             model=ChatOpenAI(
+                             model=OpenAI(
                                  model_name='gpt-3.5-turbo',
                                  temperature=0.2),
                              plan=interview_plan,
